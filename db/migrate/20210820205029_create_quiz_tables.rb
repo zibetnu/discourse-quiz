@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class CreateQuizTables < ActiveRecord::Migration[6.1]
-  def up
+  def change
     create_table :quizzes do |t|
       t.integer :time_limit
       t.integer :max_attempts_allowed, default: 1
@@ -30,12 +30,13 @@ class CreateQuizTables < ActiveRecord::Migration[6.1]
 
     create_table :quiz_attempts do |t|
       t.timestamp :finished_at, null: true
-      t.integer :score, null: true
 
       t.timestamps
     end
 
     create_table :quiz_question_responses do |t|
+      t.text :answer, null: false
+
       t.timestamps
     end
   end

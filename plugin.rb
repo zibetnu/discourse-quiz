@@ -18,18 +18,4 @@ after_initialize do
     ../app/models/quiz_question.rb
     ../app/models/quiz_question_response.rb
   ].each { |path| load File.expand_path(path, __FILE__) }
-
-  # Create "True" and "False" options with ids 1 and 2.
-  if !QuizOption.where(id: 1).exists?
-    true_option = QuizOption.new
-    true_option.text = "True"
-    true_option.position = 0
-    true_option.save
-  end
-  if !QuizOption.where(id: 2).exists?
-    true_option = QuizOption.new
-    true_option.text = "False"
-    true_option.position = 1
-    true_option.save
-  end
 end

@@ -74,27 +74,16 @@ class CreateQuizRelationships < ActiveRecord::Migration[6.1]
 
     execute <<~SQL
       ALTER TABLE quiz_question_responses
-      ADD COLUMN IF NOT EXISTS quiz_question_id BIGINT REFERENCES quiz_attempts(id) NOT NULL
+      ADD COLUMN IF NOT EXISTS quiz_question_id BIGINT REFERENCES quiz_questions(id) NOT NULL
     SQL
 
     execute <<~SQL
       CREATE INDEX CONCURRENTLY IF NOT EXISTS
       index_quiz_question_responses_on_quiz_question_id ON quiz_question_responses USING BTREE (quiz_question_id)
     SQL
-
-    execute <<~SQL
-      ALTER TABLE quiz_question_responses
-      ADD COLUMN IF NOT EXISTS quiz_option_id BIGINT REFERENCES quiz_attempts(id) NOT NULL
-    SQL
-
-    execute <<~SQL
-      CREATE INDEX CONCURRENTLY IF NOT EXISTS
-      index_quiz_question_responses_on_quiz_option_id ON quiz_question_responses USING BTREE (quiz_option_id)
-    SQL
   end
 
   def down
-    remove_column :quiz_question_responses, :quiz_option_id
     remove_column :quiz_question_responses, :quiz_question_id
     remove_column :quiz_question_responses, :quiz_attempt_id
     remove_column :quiz_attempts, :quiz_id
