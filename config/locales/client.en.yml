@@ -1,2 +1,5 @@
 en:
   js:
+    discourse_quiz:
+      ui_builder:
+        title: Build Quiz

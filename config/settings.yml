@@ -1,4 +1,4 @@
 plugins:
-  plugin_name_enabled:
+  discourse_quiz_enabled:
     default: true
     client: true
