@@ -10,6 +10,10 @@
 
 enabled_site_setting :discourse_quiz_enabled
 
+register_asset "stylesheets/common/quiz-ui-builder.scss"
+register_asset "stylesheets/desktop/quiz-ui-builder.scss", :desktop
+register_asset "stylesheets/common/quiz.scss"
+
 after_initialize do
   %w[
     ../app/models/quiz.rb

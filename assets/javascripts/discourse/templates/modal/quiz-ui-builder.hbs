@@ -1,0 +1,60 @@
+<DModalBody
+  @title="discourse_quiz.ui_builder.title"
+  class="quiz-ui-builder"
+  @submitOnEnter={{false}}
+>
+  <div class="quiz-questions-header">
+    <p>{{i18n "discourse_quiz.ui_builder.questions"}}</p>
+    <div class="quiz-questions-nav">
+      {{#each this.questions as |question index|}}
+        <QuestionNumber
+          @index={{index}}
+          @activeQuestionIndex={{this.activeQuestionIndex}}
+          @changeActive={{action "changeActive"}}
+          @error={{question.error}}
+        />
+      {{/each}}
+      <DButton
+        @action={{action "addQuestion"}}
+        @icon="plus"
+        class="btn-secondary"
+        @title="js.discourse_quiz.ui_builder.add_question"
+      />
+    </div>
+  </div>
+
+  {{#if activeQuestion}}
+    <QuestionBody
+      @index={{activeQuestionIndex}}
+      @text={{activeQuestion.text}}
+      @format={{activeQuestion.format}}
+      @position={{activeQuestion.position}}
+      @id={{activeQuestion.question_id}}
+      @options={{activeQuestion.options}}
+      @answer={{activeQuestion.answer}}
+      @changeAnswer={{this.changeAnswer}}
+      @removeQuestionOption={{action removeQuestionOption}}
+      @addQuestionOption={{action addQuestionOption}}
+      @deleteQuestion={{action deleteQuestion}}
+      @moveQuestion={{action moveQuestion}}
+      @numQuestions={{questions.length}}
+      @error={{activeQuestion.error}}
+    />
+  {{/if}}
+</DModalBody>
+
+<div class="modal-footer">
+  <DButton
+    @action={{action "insertQuiz"}}
+    @icon="list"
+    @label="discourse_quiz.ui_builder.insert"
+    class="btn-primary"
+    disabled={{disableInsert}}
+  />
+  <DButton
+    @action={{route-action "closeModal"}}
+    @label="cancel"
+    class="btn-flat"
+    disabled={{disableInsert}}
+  />
+</div>

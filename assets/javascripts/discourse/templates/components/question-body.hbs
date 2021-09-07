@@ -1,0 +1,93 @@
+<div class="quiz-question-body">
+  <div class="quiz-question-header">
+    <div class="quiz-question-controls">
+      <DButton
+        class="btn-secondary"
+        @icon="chevron-left"
+        @title="discourse_quiz.ui_builder.move_forward"
+        @action={{action "move" -1}}
+        @disabled={{isFirstQuestion}}
+      />
+      <DButton
+        class="btn-secondary"
+        @icon="chevron-right"
+        @title="discourse_quiz.ui_builder.move_back"
+        @action={{action "move" 1}}
+        @disabled={{isLastQuestion}}
+      />
+      <DButton
+        @action={{action "delete"}}
+        class="btn-danger"
+        @label="discourse_quiz.ui_builder.delete_question"
+      />
+    </div>
+    {{#if error}}
+      <p class="quiz-question-error">
+        {{d-icon "exclamation-triangle"}}
+        {{error}}
+      </p>
+    {{/if}}
+  </div>
+  <Textarea
+    @placeholder={{i18n "discourse_quiz.ui_builder.question_placeholder"}}
+    @value={{this.text}}
+  />
+  <div class="quiz-question-formats">
+    <DButton
+      @action={{action "setFormat" "multiple_choice"}}
+      class={{if isMultipleChoice "btn-primary" "btn-flat"}}
+      @label="discourse_quiz.ui_builder.multiple_choice"
+    />
+    <DButton
+      @action={{action "setFormat" "true_false"}}
+      class={{if isTrueFalse "btn-primary" "btn-flat"}}
+      @label="discourse_quiz.ui_builder.true_false"
+    />
+  </div>
+  <div class="quiz-question-options">
+    {{#if isMultipleChoice }}
+      {{#each options as |option optionIndex|}}
+        <QuestionOption
+          @index={{optionIndex}}
+          @text={{option}}
+          @answer={{answer}}
+          @setAnswer={{action setAnswer}}
+          @editable={{true}}
+          @removeOption={{action removeOption}}
+          @questionIndex={{index}}
+        />
+      {{/each}}
+      <div class="quiz-question-option new-quiz-option">
+        <Input
+          @type="text"
+          @placeholder={{i18n "discourse_quiz.ui_builder.add_option_placeholder"}}
+          @value={{newQuizOption}}
+          @enter={{action "addOption"}}
+        />
+        <DButton
+          @action={{action "addOption"}}
+          @icon="plus"
+          class="btn-secondary"
+          @title="js.discourse_quiz.ui_builder.add_option"
+        />
+      </div>
+    {{else}}
+      <QuestionOption
+        @text="True"
+        @index={{true}}
+        @answer={{answer}}
+        @setAnswer={{action setAnswer}}
+        @editable={{false}}
+        @questionIndex={{index}}
+      />
+      <QuestionOption
+        @text="False"
+        @index={{false}}
+        @answer={{answer}}
+        @setAnswer={{action setAnswer}}
+        @editable={{false}}
+        @questionIndex={{index}}
+      />
+    {{/if}}
+  </div>
+</div>
