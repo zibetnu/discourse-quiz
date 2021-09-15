@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-Fabricator(:quiz_question, from: 'QuizQuestion') do
+Fabricator(:quiz_question, from: 'DiscourseQuiz::QuizQuestion') do
   quiz
-  raw "How far is the Earth from the Sun?"
-  cooked "How far is the Earth from the Sun?"
-  position 1
+  text "How far is the Earth from the Sun?"
+  options ["Option 1", "Option 2"]
+  answer 0
 end

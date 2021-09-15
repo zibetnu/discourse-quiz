@@ -1,1 +1,7 @@
 en:
+  discourse_quiz:
+    errors:
+      models:
+        quiz:
+          only_one_quiz: "A post can only have one quiz."
+          must_be_in_first_post: "A quiz can only be in the first post of a topic."
