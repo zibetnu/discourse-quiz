@@ -18,3 +18,11 @@ en:
         add_option_placeholder: Add an option
       widget:
         title: Quiz
+        more: More
+        edit: Edit
+        preview: Preview
+        delete: Delete
+        open: Open
+        close: Close
+        start: Start Quiz
+        results: View Results

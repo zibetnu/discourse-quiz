@@ -1,9 +1,78 @@
 .quiz {
-  padding: 2em 1em;
-  border: 1px solid #e9e9e9;
+  margin: 1em 0;
+  border: 5px solid var(--primary-low);
+  .quiz-preview {
+    .quiz-preview-body {
+      padding: 10px;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+    }
 
-  h2 {
-    margin: 0;
-    text-align: center;
+    h2 {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      svg {
+        width: 32px;
+        height: 32px;
+        margin-right: 5px;
+      }
+    }
+
+    .widget-dropdown-header {
+      .label {
+        display: none;
+      }
+
+      .d-icon {
+        margin: 0;
+      }
+    }
+
+    .widget-dropdown-body {
+      .widget-dropdown-item {
+        padding: 5px;
+        span {
+          margin-left: 5px;
+        }
+      }
+
+      .item-delete {
+        color: var(--danger);
+
+        .d-icon {
+          color: var(--danger);
+        }
+      }
+    }
+
+    .quiz-info {
+      margin: 0.5em 0 0 0;
+      p {
+        margin: 0.5em 0;
+      }
+    }
+
+    .quiz-preview-right-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      #quiz-lock-icon {
+        .d-icon {
+          width: 36px;
+          height: 36px;
+          color: var(--primary-low-mid);
+        }
+      }
+    }
+
+    .quiz-preview-footer {
+      border-top: 2px solid var(--primary-low);
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }

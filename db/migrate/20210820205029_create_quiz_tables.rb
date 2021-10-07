@@ -2,13 +2,12 @@
 class CreateQuizTables < ActiveRecord::Migration[6.1]
   def change
     create_table :quizzes do |t|
+      t.text :title, null: false
       t.integer :time_limit, null: true
-      t.integer :max_attempts_allowed, null: false, default: 1
+      t.integer :max_attempts, null: true
       t.boolean :is_open, null: false, default: false
-      t.boolean :is_editable, null: false, default: true
       t.timestamp :open_at, null: true
       t.timestamp :close_at, null: true
-
       t.timestamps
     end
 

@@ -5,7 +5,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default Component.extend({
   @discourseComputed("answer", "index")
   isSelected(answer, index) {
-    return answer === index;
+    return answer === index || parseInt(answer, 10) === index;
   },
 
   @discourseComputed("questionIndex")

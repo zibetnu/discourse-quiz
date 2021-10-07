@@ -7,7 +7,7 @@ QUESTION_ATTRS_PATTERN = /\[question (.*?)\]/ # Get all question attributes
 QUESTION_ATTR_PATTERN = /(\w+)="(\w+)"/ # Extract attribute info for individual attribute
 QUESTION_TEXT_PATTERN = /\[question .*\]\s([\s\S]*?)\n\*/ # Extract question text
 QUESTION_OPTIONS_PATTERN = /\*+ .*/ # Get all options for a given question
-QUESTION_OPTION_PATTERN = /(\*+?) (\w*)/ # Extract option info for individual option
+QUESTION_OPTION_PATTERN = /(\*+?) (.*)/ # Extract option info for individual option
 
 module DiscourseQuiz
   class QuizParser
@@ -53,7 +53,7 @@ module DiscourseQuiz
               options.each_with_index do |option, index|
                 mark, option_text = option.match(QUESTION_OPTION_PATTERN).captures
                 if mark == "**"
-                  question_data[:answer] = option_text.downcase == "true"
+                  question_data[:answer] = option_text.downcase
                 end
               end
             end

@@ -40,7 +40,7 @@ function initializeQuizUIBuilder(api) {
     ) {
       return {
         action: "showQuizBuilder",
-        icon: "list-ul",
+        icon: "graduation-cap",
         label: "discourse_quiz.ui_builder.title",
         condition: "canBuildQuiz",
       };

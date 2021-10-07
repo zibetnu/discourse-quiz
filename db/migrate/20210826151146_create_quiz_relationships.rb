@@ -68,7 +68,6 @@ class CreateQuizRelationships < ActiveRecord::Migration[6.1]
     remove_column :quiz_question_responses, :quiz_attempt_id
     remove_column :quiz_attempts, :quiz_id
     remove_column :quiz_attempts, :user_id
-    remove_column :quiz_questions, :correct_option_id
     remove_column :quiz_questions, :quiz_id
     remove_column :quizzes, :post_id
 

@@ -20,6 +20,7 @@ module DiscourseQuiz
   end
 
   class QuizQuestionResponse < ActiveRecord::Base
+    self.table_name = "quiz_question_responses"
     belongs_to :quiz_attempt
     belongs_to :quiz_question
 
