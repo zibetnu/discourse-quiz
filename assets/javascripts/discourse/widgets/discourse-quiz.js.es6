@@ -43,6 +43,8 @@ createWidget("discourse-quiz", {
         showModal("quiz-ui-builder").setProperties({
           questions: resp.content,
           activeQuestionIndex: 0,
+          mode: "update",
+          model: this.state.model,
         });
       });
   },

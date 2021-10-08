@@ -12,3 +12,14 @@ It’s intended for the following uses:
 - Special interest communities looking to create a fun challenge to test the knowledge of your community members: e.g. “Take this quiz to see how much you really know about XXXXXX”.
 
 At least for version 1, it will only support multiple choice and True/False questions. This allows the quiz to be immediately scored without input from a staff member.
+
+## Linting
+
+To run linting locally, call the following 4 commands:
+
+```
+rubocop .
+prettier -w .
+yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern {test,assets}/javascripts
+yarn ember-template-lint assets/javascripts
+```

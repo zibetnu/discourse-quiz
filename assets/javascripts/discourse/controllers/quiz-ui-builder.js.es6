@@ -3,14 +3,28 @@ import { action, set } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
+import TextLib from "discourse/lib/text";
+import { extractError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
   questions: null,
   activeQuestionIndex: null,
+  mode: "create",
+  isLoading: false,
 
   @discourseComputed("activeQuestionIndex", "questions")
   activeQuestion(activeQuestionIndex, questions) {
     return questions[activeQuestionIndex];
+  },
+
+  @discourseComputed("mode")
+  inCreateMode(mode) {
+    return mode === "create";
+  },
+
+  @discourseComputed("mode")
+  inUpdateMode(mode) {
+    return mode === "update";
   },
 
   @action
@@ -186,14 +200,14 @@ export default Controller.extend(ModalFunctionality, {
       lines.push(question.text);
       if (question.format === "multiple_choice") {
         for (const [index, option] of question.options.entries()) {
-          if (index === question.answer) {
+          if (index === parseInt(question.answer, 10)) {
             lines.push(`** ${option}`);
           } else {
             lines.push(`* ${option}`);
           }
         }
       } else if (question.format === "true_false") {
-        if (question.answer === true) {
+        if (question.answer === "true") {
           lines.push("** True");
           lines.push("* False");
         } else {
@@ -203,15 +217,46 @@ export default Controller.extend(ModalFunctionality, {
       }
       lines.push("[/question]");
     }
-    lines.push("[/quiz]\n");
+    lines.push("[/quiz]");
     return lines.join("\n");
   },
 
   @action
-  insertQuiz() {
+  upsertQuiz() {
     if (this.verify()) {
-      this.toolbarEvent.addText(this.formatOutput());
-      this.send("closeModal");
+      if (this.inCreateMode) {
+        this.toolbarEvent.addText(this.formatOutput());
+      } else if (this.inUpdateMode) {
+        this.set("isLoading", true);
+        this.store
+          .find("post", this.model.post_id)
+          .then((post) => {
+            const quiz_pattern = /\[quiz[\s\S]*?\[\/quiz\]/;
+            const newRaw = post.raw.replace(quiz_pattern, this.formatOutput());
+            const props = {
+              raw: newRaw,
+              edit_reason: I18n.t("discourse_quiz.ui_builder.edit_reason"),
+            };
+
+            return TextLib.cookAsync(newRaw).then((cooked) => {
+              props.cooked = cooked.string;
+              return post
+                .save(props)
+                .catch((e) => {
+                  this.set("isLoading", false);
+                  this.flash(extractError(e), "error");
+                })
+                .then(() => {
+                  this.set("isLoading", false);
+                  this.send("closeModal");
+                });
+            });
+          })
+          .catch((e) => {
+            this.set("isLoading", false);
+            this.flash(extractError(e), "error");
+          });
+      }
     }
   },
 });

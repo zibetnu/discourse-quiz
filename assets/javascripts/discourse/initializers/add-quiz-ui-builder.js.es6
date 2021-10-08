@@ -23,6 +23,7 @@ function initializeQuizUIBuilder(api) {
             },
           ],
           activeQuestionIndex: 0,
+          mode: "create",
         });
       },
     },

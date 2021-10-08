@@ -11,6 +11,7 @@ describe DiscourseQuiz::QuizParser do
       puts(quizzes)
       expect(quizzes.length).to eq(1)
       expect(quizzes.first[:questions][2][:options].first).to eq("Option 1 has spaces in it")
+      expect(quizzes.first[:questions][1][:answer]).to eq("false")
     end
   end
 end

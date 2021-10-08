@@ -4,6 +4,8 @@ en:
       ui_builder:
         title: Build Quiz
         insert: Insert Quiz
+        update: Update Quiz
+        edit_reason: Quiz updated
         true_false: True/False
         questions: Questions
         multiple_choice: Multiple Choice
