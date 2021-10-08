@@ -1,6 +1,9 @@
 import { createWidget } from "discourse/widgets/widget";
 import hbs from "discourse/widgets/hbs-compiler";
 import showModal from "discourse/lib/show-modal";
+import TextLib from "discourse/lib/text";
+import I18n from "I18n";
+import { extractError } from "discourse/lib/ajax-error";
 
 createWidget("discourse-quiz", {
   tagName: "div.quiz",
@@ -47,6 +50,41 @@ createWidget("discourse-quiz", {
           model: this.state.model,
         });
       });
+  },
+
+  delete() {
+    /* Delete the quiz from the post */
+    bootbox.confirm(
+      I18n.t("discourse_quiz.ui_builder.confirm_delete_quiz"),
+      I18n.t("no_value"),
+      I18n.t("yes_value"),
+      (confirmed) => {
+        if (confirmed) {
+          this.store
+            .find("post", this.state.model.post_id)
+            .then((post) => {
+              const quiz_pattern = /\[quiz[\s\S]*?\[\/quiz\]/;
+              const newRaw = post.raw.replace(quiz_pattern, "");
+              const props = {
+                raw: newRaw,
+                edit_reason: I18n.t(
+                  "discourse_quiz.ui_builder.edit_reason_delete"
+                ),
+              };
+
+              return TextLib.cookAsync(newRaw).then((cooked) => {
+                props.cooked = cooked.string;
+                return post.save(props).catch((e) => {
+                  this.flash(extractError(e), "error");
+                });
+              });
+            })
+            .catch((e) => {
+              this.flash(extractError(e), "error");
+            });
+        }
+      }
+    );
   },
 
   template: hbs`

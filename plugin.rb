@@ -67,7 +67,7 @@ after_initialize do
 
   # Create/Update quiz when post is created/updated
   on(:post_process_cooked) do |doc, post|
-    DiscourseQuiz::Quiz.upsert_from_post(post)
+    DiscourseQuiz::Quiz.sync_from_post(post)
   end
 
   # Extend post serializer with quiz data

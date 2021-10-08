@@ -7,7 +7,7 @@ module DiscourseQuiz
     has_many :attempts, class_name: "QuizAttempt", dependent: :destroy
     belongs_to :post
 
-    def self.upsert_from_post(post)
+    def self.sync_from_post(post)
       quizzes = DiscourseQuiz::QuizParser.extract_quizzes(post)
       if quizzes.present?
         quiz_data = quizzes.first
@@ -37,6 +37,10 @@ module DiscourseQuiz
         # Save quiz
         quiz.save!
         quiz
+      elsif post.quiz
+        # Delete quiz
+        post.quiz.destroy!
+        nil
       end
     end
   end

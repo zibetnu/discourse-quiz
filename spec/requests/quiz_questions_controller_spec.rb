@@ -13,7 +13,7 @@ describe DiscourseQuiz::QuizQuestionsController do
     end
     it "returns successful response for staff, with answers included" do
       post = Fabricate(:post, raw: SAMPLE_QUIZ)
-      quiz = DiscourseQuiz::Quiz.upsert_from_post(post)
+      quiz = DiscourseQuiz::Quiz.sync_from_post(post)
       user = Fabricate(:user, admin: true)
       sign_in(user)
       get "/quizzes/#{quiz.id}/questions.json"
@@ -22,7 +22,7 @@ describe DiscourseQuiz::QuizQuestionsController do
     end
     it "returns successful response if open, with answers hidden" do
       post = Fabricate(:post, raw: SAMPLE_QUIZ)
-      quiz = DiscourseQuiz::Quiz.upsert_from_post(post)
+      quiz = DiscourseQuiz::Quiz.sync_from_post(post)
       quiz.is_open = true
       quiz.save!
       get "/quizzes/#{quiz.id}/questions.json"

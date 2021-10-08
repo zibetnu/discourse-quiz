@@ -226,6 +226,7 @@ export default Controller.extend(ModalFunctionality, {
     if (this.verify()) {
       if (this.inCreateMode) {
         this.toolbarEvent.addText(this.formatOutput());
+        this.send("closeModal");
       } else if (this.inUpdateMode) {
         this.set("isLoading", true);
         this.store
@@ -235,7 +236,9 @@ export default Controller.extend(ModalFunctionality, {
             const newRaw = post.raw.replace(quiz_pattern, this.formatOutput());
             const props = {
               raw: newRaw,
-              edit_reason: I18n.t("discourse_quiz.ui_builder.edit_reason"),
+              edit_reason: I18n.t(
+                "discourse_quiz.ui_builder.edit_reason_update"
+              ),
             };
 
             return TextLib.cookAsync(newRaw).then((cooked) => {
