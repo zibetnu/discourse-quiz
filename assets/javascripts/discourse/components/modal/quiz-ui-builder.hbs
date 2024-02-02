@@ -1,8 +1,11 @@
-<DModalBody
-  @title="discourse_quiz.ui_builder.title"
-  class="quiz-ui-builder"
+<DModal
+  @closeModal={{@closeModal}}
+  @title={{i18n "discourse_quiz.ui_builder.title"}}
+  class="quiz-ui-builder-modal"
   @submitOnEnter={{false}}
+  @flash={{this.flash}}
 >
+<:body>
   {{#if isLoading}}
     {{loading-spinner}}
   {{else}}
@@ -45,8 +48,8 @@
       />
     {{/if}}
   {{/if}}
-</DModalBody>
-
+</:body>
+<:footer>
 <div class="modal-footer">
   <DButton
     @action={{action "upsertQuiz"}}
@@ -60,3 +63,5 @@
     class="btn-flat"
   />
 </div>
+</:footer>
+</DModal>
