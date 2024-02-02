@@ -1,16 +1,16 @@
-import Controller from "@ember/controller";
+import Component from "@ember/component";
 import { action, set } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
 import TextLib from "discourse/lib/text";
 import { extractError } from "discourse/lib/ajax-error";
 
-export default Controller.extend(ModalFunctionality, {
+export default Component.extend({
   questions: null,
   activeQuestionIndex: null,
   mode: "create",
   isLoading: false,
+  flash: "",
 
   @discourseComputed("activeQuestionIndex", "questions")
   activeQuestion(activeQuestionIndex, questions) {
@@ -226,7 +226,7 @@ export default Controller.extend(ModalFunctionality, {
     if (this.verify()) {
       if (this.inCreateMode) {
         this.toolbarEvent.addText(this.formatOutput());
-        this.send("closeModal");
+        this.closeModal();
       } else if (this.inUpdateMode) {
         this.set("isLoading", true);
         this.store
@@ -247,17 +247,17 @@ export default Controller.extend(ModalFunctionality, {
                 .save(props)
                 .catch((e) => {
                   this.set("isLoading", false);
-                  this.flash(extractError(e), "error");
+                  this.set("flash", extractError(e))
                 })
                 .then(() => {
                   this.set("isLoading", false);
-                  this.send("closeModal");
+                  this.closeModal();
                 });
             });
           })
           .catch((e) => {
             this.set("isLoading", false);
-            this.flash(extractError(e), "error");
+            this.set("flash", extractError(e))
           });
       }
     }
