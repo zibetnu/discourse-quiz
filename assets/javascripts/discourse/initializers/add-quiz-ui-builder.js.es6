@@ -1,5 +1,5 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import showModal from "discourse/lib/show-modal";
+import QuizUiBuilder from "../components/modal/quiz-ui-builder";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 function initializeQuizUIBuilder(api) {
@@ -11,8 +11,8 @@ function initializeQuizUIBuilder(api) {
 
     actions: {
       showQuizBuilder() {
-        showModal("quiz-ui-builder").setProperties({
-          toolbarEvent: this.toolbarEvent,
+        api.container.lookup("service:modal").show(QuizUiBuilder, {
+          model: { toolbarEvent },
           questions: [
             {
               format: "multiple_choice",
@@ -29,23 +29,15 @@ function initializeQuizUIBuilder(api) {
     },
   });
 
-  api.addToolbarPopupMenuOptionsCallback((composerController) => {
-    const composerModel = composerController.model;
-    if (
-      composerModel &&
-      !composerModel.replyingToTopic &&
-      (composerModel.topicFirstPost ||
-        (composerModel.editingPost &&
-          composerModel.post &&
-          composerModel.post.post_number === 1))
-    ) {
-      return {
-        action: "showQuizBuilder",
-        icon: "graduation-cap",
-        label: "discourse_quiz.ui_builder.title",
-        condition: "canBuildQuiz",
-      };
-    }
+  api.addComposerToolbarPopupMenuOption({
+    action: (toolbarEvent) => {
+      api.container.lookup("service:modal").show(QuizUiBuilder, {
+        model: { toolbarEvent },
+      });
+    },
+    icon: "graduation-cap",
+    label: "discourse_quiz.ui_builder.title",
+    condition: (composer) => "canBuildQuiz",
   });
 }
 

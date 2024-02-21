@@ -5,37 +5,37 @@ import I18n from "I18n";
 import TextLib from "discourse/lib/text";
 import { extractError } from "discourse/lib/ajax-error";
 
-export default Component.extend({
-  questions: null,
-  activeQuestionIndex: null,
-  mode: "create",
-  isLoading: false,
-  flash: "",
+export default class QuizUiBuilder extends Component {
+  questions = [];
+  activeQuestionIndex = null;
+  mode = "create";
+  isLoading = false;
+  flash = "";
 
   @discourseComputed("activeQuestionIndex", "questions")
   activeQuestion(activeQuestionIndex, questions) {
     return questions[activeQuestionIndex];
-  },
+  }
 
   @discourseComputed("mode")
   inCreateMode(mode) {
     return mode === "create";
-  },
+  }
 
   @discourseComputed("mode")
   inUpdateMode(mode) {
     return mode === "update";
-  },
+  }
 
   @action
   changeActive(newActive) {
     this.set("activeQuestionIndex", newActive);
-  },
+  }
 
   @action
   changeAnswer(questionIndex, answer) {
     set(this.questions[questionIndex], "answer", answer);
-  },
+  }
 
   @action
   removeQuestionOption(questionIndex, optionIndex) {
@@ -49,12 +49,12 @@ export default Component.extend({
       );
     }
     this.questions[questionIndex].options.removeAt(optionIndex);
-  },
+  }
 
   @action
   addQuestionOption(questionIndex, optionText) {
     this.questions[questionIndex].options.pushObject(optionText);
-  },
+  }
 
   @action
   addQuestion() {
@@ -66,7 +66,7 @@ export default Component.extend({
       error: null,
     });
     this.set("activeQuestionIndex", this.questions.length - 1);
-  },
+  }
 
   @action
   deleteQuestion(questionIndex) {
@@ -99,7 +99,7 @@ export default Component.extend({
         }
       }
     );
-  },
+  }
 
   @action
   moveQuestion(questionIndex, positions) {
@@ -144,7 +144,7 @@ export default Component.extend({
         return this.moveQuestion(questionIndex - 1, positions + 1);
       }
     }
-  },
+  }
 
   verify() {
     let isError = false;
@@ -191,7 +191,7 @@ export default Component.extend({
     }
 
     return !isError;
-  },
+  }
 
   formatOutput() {
     let lines = ["[quiz]"];
@@ -219,13 +219,13 @@ export default Component.extend({
     }
     lines.push("[/quiz]");
     return lines.join("\n");
-  },
+  }
 
   @action
   upsertQuiz() {
     if (this.verify()) {
       if (this.inCreateMode) {
-        this.toolbarEvent.addText(this.formatOutput());
+        this.model.toolbarEvent.addText(this.formatOutput());
         this.closeModal();
       } else if (this.inUpdateMode) {
         this.set("isLoading", true);
@@ -261,5 +261,5 @@ export default Component.extend({
           });
       }
     }
-  },
-});
+  }
+};
