@@ -4,6 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import TextLib from "discourse/lib/text";
 import { extractError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
 
 export default class QuizUiBuilder extends Component {
   questions = [];
@@ -11,6 +12,8 @@ export default class QuizUiBuilder extends Component {
   mode = "create";
   isLoading = false;
   flash = "";
+
+  @service dialog;
 
   @discourseComputed("activeQuestionIndex", "questions")
   activeQuestion(activeQuestionIndex, questions) {
@@ -70,35 +73,31 @@ export default class QuizUiBuilder extends Component {
 
   @action
   deleteQuestion(questionIndex) {
-    bootbox.confirm(
-      I18n.t("discourse_quiz.ui_builder.confirm_delete_question"),
-      I18n.t("no_value"),
-      I18n.t("yes_value"),
-      (confirmed) => {
-        if (confirmed) {
-          let deletingLast = questionIndex === this.questions.length - 1;
-          this.questions.removeAt(questionIndex);
-          if (deletingLast) {
-            this.changeActive(questionIndex - 1);
-          } else {
-            this.changeActive(null); // set null first to force refresh
-            this.changeActive(questionIndex);
-          }
-          window.setTimeout(function () {
-            const deleteButton = document.querySelector(
-              ".quiz-question-controls button.btn-danger"
-            );
-            if (deleteButton) {
-              // Keep focus on delete button if possible
-              deleteButton.focus();
-            } else {
-              // When all questions have been deleted, focus on the "Add question" button
-              document.querySelector(".quiz-questions-nav button").focus();
-            }
-          }, 0);
+    this.dialog.deleteConfirm({
+      message: I18n.t("discourse_quiz.ui_builder.confirm_delete_question"),
+      didConfirm: () => {
+        let deletingLast = questionIndex === this.questions.length - 1;
+        this.questions.removeAt(questionIndex);
+        if (deletingLast) {
+          this.changeActive(questionIndex - 1);
+        } else {
+          this.changeActive(null); // set null first to force refresh
+          this.changeActive(questionIndex);
         }
-      }
-    );
+        window.setTimeout(function () {
+          const deleteButton = document.querySelector(
+            ".quiz-question-controls button.btn-danger"
+          );
+          if (deleteButton) {
+            // Keep focus on delete button if possible
+            deleteButton.focus();
+          } else {
+            // When all questions have been deleted, focus on the "Add question" button
+            document.querySelector(".quiz-questions-nav button").focus();
+          }
+        }, 0);
+      },
+    });
   }
 
   @action
