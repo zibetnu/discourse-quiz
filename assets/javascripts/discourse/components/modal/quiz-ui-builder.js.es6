@@ -148,7 +148,7 @@ export default class QuizUiBuilder extends Component {
   verify() {
     let isError = false;
     if (this.questions.length === 0) {
-      bootbox.alert("Error: Quiz must contain at least one question", () => {
+      this.dialog.alert("Error: Quiz must contain at least one question", () => {
         // return focus to "Insert Quiz" button
         window.setTimeout(function () {
           document.querySelector(".modal-footer button.btn-primary").focus();
