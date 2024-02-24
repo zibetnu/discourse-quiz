@@ -6,7 +6,7 @@ import TextLib from "discourse/lib/text";
 import { extractError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 
-export default class QuizUiBuilder extends Component {
+export default class QuizUiBuilderModal extends Component {
   questions = [];
   activeQuestionIndex = null;
   mode = "create";
