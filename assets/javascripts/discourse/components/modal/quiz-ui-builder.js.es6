@@ -9,7 +9,15 @@ import { inject as service } from "@ember/service";
 export default class QuizUiBuilderModal extends Component {
   @service dialog;
 
-  questions = [];
+  questions = [
+    {
+      format: "multiple_choice",
+      answer: null,
+      options: [],
+      text: "",
+      error: null,
+    },
+  ];
   activeQuestionIndex = null;
   mode = "create";
   isLoading = false;
