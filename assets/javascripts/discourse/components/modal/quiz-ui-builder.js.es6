@@ -7,13 +7,13 @@ import { extractError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 
 export default class QuizUiBuilderModal extends Component {
+  @service dialog;
+
   questions = [];
   activeQuestionIndex = null;
   mode = "create";
   isLoading = false;
   flash = "";
-
-  @service dialog;
 
   @discourseComputed("activeQuestionIndex", "questions")
   activeQuestion(activeQuestionIndex, questions) {
