@@ -181,7 +181,7 @@ export default class QuizUiBuilder extends Component {
     }
 
     if (isError) {
-      bootbox.alert("One or more questions contains an error", () => {
+      this.dialog.alert("One or more questions contains an error", () => {
         // return focus to "Insert Quiz" button
         window.setTimeout(function () {
           document.querySelector(".modal-footer button.btn-primary").focus();
