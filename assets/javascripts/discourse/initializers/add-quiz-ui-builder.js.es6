@@ -10,9 +10,18 @@ function initializeQuizUIBuilder(api) {
     },
     icon: "graduation-cap",
     label: "discourse_quiz.ui_builder.title",
-    condition: () => {
+    condition: (composer) => {
+      const composerModel = composer.model;
       const siteSettings = api.container.lookup("service:site-settings");
-      return siteSettings.discourse_quiz_enabled;
+
+      return (
+        siteSettings.discourse_quiz_enabled &&
+        !composerModel.replyingToTopic &&
+        (composerModel.topicFirstPost ||
+          (composerModel.editingPost &&
+            composerModel.post &&
+            composerModel.post.post_number === 1))
+      );
     },
   });
 }
