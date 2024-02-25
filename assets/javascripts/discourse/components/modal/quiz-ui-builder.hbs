@@ -6,7 +6,7 @@
   @flash={{this.flash}}
 >
   <:body>
-    {{#if isLoading}}
+    {{#if this.isLoading}}
       {{loading-spinner}}
     {{else}}
       <div class="quiz-questions-header">
@@ -29,22 +29,22 @@
         </div>
       </div>
 
-      {{#if activeQuestion}}
+      {{#if this.activeQuestion}}
         <QuestionBody
-          @index={{activeQuestionIndex}}
-          @text={{activeQuestion.text}}
-          @format={{activeQuestion.format}}
-          @position={{activeQuestion.position}}
-          @id={{activeQuestion.question_id}}
-          @options={{activeQuestion.options}}
-          @answer={{activeQuestion.answer}}
+          @index={{this.activeQuestionIndex}}
+          @text={{this.activeQuestion.text}}
+          @format={{this.activeQuestion.format}}
+          @position={{this.activeQuestion.position}}
+          @id={{this.activeQuestion.question_id}}
+          @options={{this.activeQuestion.options}}
+          @answer={{this.activeQuestion.answer}}
           @changeAnswer={{this.changeAnswer}}
-          @removeQuestionOption={{action removeQuestionOption}}
-          @addQuestionOption={{action addQuestionOption}}
-          @deleteQuestion={{action deleteQuestion}}
-          @moveQuestion={{action moveQuestion}}
-          @numQuestions={{questions.length}}
-          @error={{activeQuestion.error}}
+          @removeQuestionOption={{action this.removeQuestionOption}}
+          @addQuestionOption={{action this.addQuestionOption}}
+          @deleteQuestion={{action this.deleteQuestion}}
+          @moveQuestion={{action this.moveQuestion}}
+          @numQuestions={{this.questions.length}}
+          @error={{this.activeQuestion.error}}
         />
       {{/if}}
     {{/if}}
@@ -53,7 +53,7 @@
     <DButton
       @action={{action "upsertQuiz"}}
       @icon="graduation-cap"
-      @label={{if inCreateMode "discourse_quiz.ui_builder.insert" "discourse_quiz.ui_builder.update"}}
+      @label={{if this.inCreateMode "discourse_quiz.ui_builder.insert" "discourse_quiz.ui_builder.update"}}
       class="btn-primary"
     />
     <DButton

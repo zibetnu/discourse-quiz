@@ -1,13 +1,13 @@
-{{#if isActive}}
+{{#if this.isActive}}
   <button class="btn btn-primary quiz-questions-nav-item" type="button" {{action "setActive"}}>
-    {{ position }}
+    {{this.position}}
   </button>
-{{else if error}}
+{{else if this.error}}
   <button class="btn btn-danger quiz-questions-nav-item" type="button" {{action "setActive"}}>
-    {{ position }}
+    {{this.position}}
   </button>
 {{else}}
   <button class="btn btn-secondary quiz-questions-nav-item" type="button" {{action "setActive"}}>
-    {{ position }}
+    {{this.position}}
   </button>
 {{/if}}

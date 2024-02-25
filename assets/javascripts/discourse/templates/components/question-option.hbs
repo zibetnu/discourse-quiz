@@ -1,9 +1,9 @@
 <div
-  class={{if isSelected "quiz-question-option selected" "quiz-question-option"}}
+  class={{if this.isSelected "quiz-question-option selected" "quiz-question-option"}}
 >
-  <input type="radio" name={{questionName}} checked={{isSelected}} onclick={{action select}} id={{radioId}}>
-  {{#if editable}}
-    <Input @type="text" @value={{text}} />
+  <input type="radio" name={{this.questionName}} checked={{this.isSelected}} onclick={{action this.select}} id={{this.radioId}}>
+  {{#if this.editable}}
+    <Input @type="text" @value={{this.text}} />
     <DButton
       @icon="times"
       class="btn-danger"
@@ -11,6 +11,6 @@
       @title="js.discourse_quiz.ui_builder.delete_option"
     />
   {{else}}
-    <label for={{radioId}}>{{text}}</label>
+    <label for={{this.radioId}}>{{this.text}}</label>
   {{/if}}
 </div>
