@@ -248,7 +248,7 @@ export default class QuizUiBuilderModal extends Component {
               ),
             };
 
-            return TextLib.cookAsync(newRaw).then((cooked) => {
+            return TextLib.cook(newRaw).then((cooked) => {
               props.cooked = cooked.string;
               return post
                 .save(props)

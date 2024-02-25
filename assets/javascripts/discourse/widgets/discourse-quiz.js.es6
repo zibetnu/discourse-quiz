@@ -72,7 +72,7 @@ createWidget("discourse-quiz", {
                 ),
               };
 
-              return TextLib.cookAsync(newRaw).then((cooked) => {
+              return TextLib.cook(newRaw).then((cooked) => {
                 props.cooked = cooked.string;
                 return post.save(props).catch((e) => {
                   this.flash(extractError(e), "error");
