@@ -1,6 +1,7 @@
 import { createWidget } from "discourse/widgets/widget";
+import { getOwner } from "@ember/application";
 import hbs from "discourse/widgets/hbs-compiler";
-import showModal from "discourse/lib/show-modal";
+import QuizUiBuilder from "../components/modal/quiz-ui-builder";
 import TextLib from "discourse/lib/text";
 import I18n from "I18n";
 import { extractError } from "discourse/lib/ajax-error";
@@ -43,7 +44,7 @@ createWidget("discourse-quiz", {
     this.store
       .find("discourse-quiz-question", { quiz_id: this.state.model.id })
       .then((resp) => {
-        showModal("quiz-ui-builder").setProperties({
+        getOwner(this).lookup("service:modal").show(QuizUiBuilder, {
           questions: resp.content,
           activeQuestionIndex: 0,
           mode: "update",
@@ -93,7 +94,7 @@ createWidget("discourse-quiz", {
       <div class="quiz-preview-body">
         <div>
           <h2>
-            {{d-icon "graduation-cap"}} 
+            {{d-icon "graduation-cap"}}
               {{state.model.title}}
           </h2>
           <p class="quiz-info">
@@ -105,7 +106,7 @@ createWidget("discourse-quiz", {
         <div class="quiz-preview-right-side">
           <div>
             {{#if state.model.can_act_on_quiz}}
-              {{attach 
+              {{attach
                 widget="quiz-options"
                 attrs=(hash
                   model=state.model
