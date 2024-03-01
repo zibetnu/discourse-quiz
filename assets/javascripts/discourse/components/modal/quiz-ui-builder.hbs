@@ -12,7 +12,7 @@
       <div class="quiz-questions-header">
         <p>{{i18n "discourse_quiz.ui_builder.questions"}}</p>
         <div class="quiz-questions-nav">
-          {{#each this.questions as |question index|}}
+          {{#each this.model.questions as |question index|}}
             <QuestionNumber
               @index={{index}}
               @activeQuestionIndex={{this.activeQuestionIndex}}
@@ -43,7 +43,7 @@
           @addQuestionOption={{action this.addQuestionOption}}
           @deleteQuestion={{action this.deleteQuestion}}
           @moveQuestion={{action this.moveQuestion}}
-          @numQuestions={{this.questions.length}}
+          @numQuestions={{this.model.questions.length}}
           @error={{this.activeQuestion.error}}
         />
       {{/if}}

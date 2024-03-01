@@ -9,21 +9,12 @@ import { inject as service } from "@ember/service";
 export default class QuizUiBuilderModal extends Component {
   @service dialog;
 
-  questions = [
-    {
-      format: "multiple_choice",
-      answer: null,
-      options: [],
-      text: "",
-      error: null,
-    },
-  ];
   activeQuestionIndex = 0;
   mode = "create";
   isLoading = false;
   flash = "";
 
-  @discourseComputed("activeQuestionIndex", "questions")
+  @discourseComputed("activeQuestionIndex", "model.questions")
   activeQuestion(activeQuestionIndex, questions) {
     return questions[activeQuestionIndex];
   }
@@ -45,38 +36,38 @@ export default class QuizUiBuilderModal extends Component {
 
   @action
   changeAnswer(questionIndex, answer) {
-    set(this.questions[questionIndex], "answer", answer);
+    set(this.model.questions[questionIndex], "answer", answer);
   }
 
   @action
   removeQuestionOption(questionIndex, optionIndex) {
-    if (this.questions[questionIndex].answer === optionIndex) {
-      set(this.questions[questionIndex], "answer", null);
-    } else if (optionIndex < this.questions[questionIndex].answer) {
+    if (this.model.questions[questionIndex].answer === optionIndex) {
+      set(this.model.questions[questionIndex], "answer", null);
+    } else if (optionIndex < this.model.questions[questionIndex].answer) {
       set(
-        this.questions[questionIndex],
+        this.model.questions[questionIndex],
         "answer",
-        this.questions[questionIndex].answer - 1
+        this.model.questions[questionIndex].answer - 1
       );
     }
-    this.questions[questionIndex].options.removeAt(optionIndex);
+    this.model.questions[questionIndex].options.removeAt(optionIndex);
   }
 
   @action
   addQuestionOption(questionIndex, optionText) {
-    this.questions[questionIndex].options.pushObject(optionText);
+    this.model.questions[questionIndex].options.pushObject(optionText);
   }
 
   @action
   addQuestion() {
-    this.questions.pushObject({
+    this.model.questions.pushObject({
       format: "multiple_choice",
       text: "",
       options: [],
       answer: null,
       error: null,
     });
-    this.set("activeQuestionIndex", this.questions.length - 1);
+    this.set("activeQuestionIndex", this.model.questions.length - 1);
   }
 
   @action
@@ -84,8 +75,8 @@ export default class QuizUiBuilderModal extends Component {
     this.dialog.deleteConfirm({
       message: I18n.t("discourse_quiz.ui_builder.confirm_delete_question"),
       didConfirm: () => {
-        let deletingLast = questionIndex === this.questions.length - 1;
-        this.questions.removeAt(questionIndex);
+        let deletingLast = questionIndex === this.model.questions.length - 1;
+        this.model.questions.removeAt(questionIndex);
         if (deletingLast) {
           this.changeActive(questionIndex - 1);
         } else {
@@ -120,13 +111,13 @@ export default class QuizUiBuilderModal extends Component {
 
     if (positions > 0) {
       // Swap this question with the one immediately behind it
-      const question1 = this.questions[questionIndex];
-      const question2 = this.questions[questionIndex + 1];
-      this.questions
+      const question1 = this.model.questions[questionIndex];
+      const question2 = this.model.questions[questionIndex + 1];
+      this.model.questions
         .replace(questionIndex + 1, 1, [question1])
         .replace(questionIndex, 1, [question2]);
-      set(this.questions[questionIndex], "position", questionIndex + 1);
-      set(this.questions[questionIndex + 1], "position", questionIndex + 2);
+      set(this.model.questions[questionIndex], "position", questionIndex + 1);
+      set(this.model.questions[questionIndex + 1], "position", questionIndex + 2);
       if (positions === 1) {
         this.set("activeQuestionIndex", questionIndex + 1);
         return;
@@ -136,13 +127,13 @@ export default class QuizUiBuilderModal extends Component {
       }
     } else {
       // Swap this question with the one immediately before it
-      const question1 = this.questions[questionIndex];
-      const question2 = this.questions[questionIndex - 1];
-      this.questions
+      const question1 = this.model.questions[questionIndex];
+      const question2 = this.model.questions[questionIndex - 1];
+      this.model.questions
         .replace(questionIndex - 1, 1, [question1])
         .replace(questionIndex, 1, [question2]);
-      set(this.questions[questionIndex], "position", questionIndex + 1);
-      set(this.questions[questionIndex - 1], "position", questionIndex);
+      set(this.model.questions[questionIndex], "position", questionIndex + 1);
+      set(this.model.questions[questionIndex - 1], "position", questionIndex);
       if (positions === -1) {
         this.set("activeQuestionIndex", questionIndex - 1);
         return;
@@ -155,7 +146,7 @@ export default class QuizUiBuilderModal extends Component {
 
   verify() {
     let isError = false;
-    if (this.questions.length === 0) {
+    if (this.model.questions.length === 0) {
       this.dialog.alert("Error: Quiz must contain at least one question", () => {
         // return focus to "Insert Quiz" button
         window.setTimeout(function () {
@@ -166,25 +157,25 @@ export default class QuizUiBuilderModal extends Component {
       return !isError;
     }
 
-    for (const [index, question] of this.questions.entries()) {
+    for (const [index, question] of this.model.questions.entries()) {
       if (question.text === "") {
-        set(this.questions[index], "error", "Question text must not be empty");
+        set(this.model.questions[index], "error", "Question text must not be empty");
         isError = true;
       } else if (
         question.format === "multiple_choice" &&
         question.options.length < 2
       ) {
         set(
-          this.questions[index],
+          this.model.questions[index],
           "error",
           "Multiple choice questions must have at least two options"
         );
         isError = true;
       } else if (question.answer === null) {
-        set(this.questions[index], "error", "Please select the correct answer");
+        set(this.model.questions[index], "error", "Please select the correct answer");
         isError = true;
       } else {
-        set(this.questions[index], "error", null);
+        set(this.model.questions[index], "error", null);
       }
     }
 
@@ -202,7 +193,7 @@ export default class QuizUiBuilderModal extends Component {
 
   formatOutput() {
     let lines = ["[quiz]"];
-    for (const question of this.questions) {
+    for (const question of this.model.questions) {
       lines.push(`[question format="${question.format}"]`);
       lines.push(question.text);
       if (question.format === "multiple_choice") {
