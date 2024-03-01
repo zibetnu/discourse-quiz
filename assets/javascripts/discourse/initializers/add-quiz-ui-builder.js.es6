@@ -5,7 +5,18 @@ function initializeQuizUIBuilder(api) {
   api.addComposerToolbarPopupMenuOption({
     action: (toolbarEvent) => {
       api.container.lookup("service:modal").show(QuizUiBuilder, {
-        model: { toolbarEvent },
+        model: {
+          toolbarEvent,
+          questions: [{
+            format: "multiple_choice",
+            answer: null,
+            options: [],
+            text: "",
+            error: null,
+          }],
+          activeQuestionIndex: 0,
+          mode: "create",
+        },
       });
     },
     icon: "graduation-cap",

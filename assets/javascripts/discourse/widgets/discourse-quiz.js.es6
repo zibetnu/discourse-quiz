@@ -45,10 +45,12 @@ createWidget("discourse-quiz", {
       .find("discourse-quiz-question", { quiz_id: this.state.model.id })
       .then((resp) => {
         getOwner(this).lookup("service:modal").show(QuizUiBuilder, {
-          questions: resp.content,
-          activeQuestionIndex: 0,
-          mode: "update",
-          model: this.state.model,
+          model: {
+            questions: resp.content,
+            activeQuestionIndex: 0,
+            mode: "update",
+            post_id: this.state.model.post_id,
+          },
         });
       });
   },
