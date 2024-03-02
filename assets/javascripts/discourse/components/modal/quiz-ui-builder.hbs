@@ -15,7 +15,7 @@
           {{#each this.model.questions as |question index|}}
             <QuestionNumber
               @index={{index}}
-              @activeQuestionIndex={{this.activeQuestionIndex}}
+              @activeQuestionIndex={{this.model.activeQuestionIndex}}
               @changeActive={{action "changeActive"}}
               @error={{question.error}}
             />
@@ -31,7 +31,7 @@
 
       {{#if this.activeQuestion}}
         <QuestionBody
-          @index={{this.activeQuestionIndex}}
+          @index={{this.model.activeQuestionIndex}}
           @text={{this.activeQuestion.text}}
           @format={{this.activeQuestion.format}}
           @position={{this.activeQuestion.position}}

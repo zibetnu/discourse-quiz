@@ -9,11 +9,10 @@ import { inject as service } from "@ember/service";
 export default class QuizUiBuilderModal extends Component {
   @service dialog;
 
-  activeQuestionIndex = 0;
   isLoading = false;
   flash = "";
 
-  @discourseComputed("activeQuestionIndex", "model.questions")
+  @discourseComputed("model.activeQuestionIndex", "model.questions")
   activeQuestion(activeQuestionIndex, questions) {
     return questions[activeQuestionIndex];
   }
@@ -30,7 +29,7 @@ export default class QuizUiBuilderModal extends Component {
 
   @action
   changeActive(newActive) {
-    this.set("activeQuestionIndex", newActive);
+    set(this.model, "activeQuestionIndex", newActive);
   }
 
   @action
@@ -66,7 +65,7 @@ export default class QuizUiBuilderModal extends Component {
       answer: null,
       error: null,
     });
-    this.set("activeQuestionIndex", this.model.questions.length - 1);
+    set(this.model, "activeQuestionIndex", this.model.questions.length - 1);
   }
 
   @action
@@ -118,7 +117,7 @@ export default class QuizUiBuilderModal extends Component {
       set(this.model.questions[questionIndex], "position", questionIndex + 1);
       set(this.model.questions[questionIndex + 1], "position", questionIndex + 2);
       if (positions === 1) {
-        this.set("activeQuestionIndex", questionIndex + 1);
+        set(this.model, "activeQuestionIndex", questionIndex + 1);
         return;
       } else {
         // Continue swapping back until desired number of positions moved
@@ -134,7 +133,7 @@ export default class QuizUiBuilderModal extends Component {
       set(this.model.questions[questionIndex], "position", questionIndex + 1);
       set(this.model.questions[questionIndex - 1], "position", questionIndex);
       if (positions === -1) {
-        this.set("activeQuestionIndex", questionIndex - 1);
+        set(this.model, "activeQuestionIndex", questionIndex - 1);
         return;
       } else {
         // Continue swapping forward until desired number of positions moved
