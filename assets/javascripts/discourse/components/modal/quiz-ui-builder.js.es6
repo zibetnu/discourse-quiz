@@ -10,7 +10,6 @@ export default class QuizUiBuilderModal extends Component {
   @service dialog;
 
   activeQuestionIndex = 0;
-  mode = "create";
   isLoading = false;
   flash = "";
 
@@ -19,12 +18,12 @@ export default class QuizUiBuilderModal extends Component {
     return questions[activeQuestionIndex];
   }
 
-  @discourseComputed("mode")
+  @discourseComputed("model.mode")
   inCreateMode(mode) {
     return mode === "create";
   }
 
-  @discourseComputed("mode")
+  @discourseComputed("model.mode")
   inUpdateMode(mode) {
     return mode === "update";
   }
