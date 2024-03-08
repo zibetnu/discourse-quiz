@@ -22,16 +22,6 @@ class DiscourseQuiz::QuizAttemptsController < ::ApplicationController
     ).as_json
   end
 
-  def update
-    attempt = DiscourseQuiz::QuizAttempt.find(params[:id])
-
-    attempt.update!(quiz_attempt_params)
-
-    render json: DiscourseQuiz::QuizAttemptSerializer.new(
-      quiz_attempt
-    ).as_json
-  end
-
   private
 
   def quiz_attempt_params
