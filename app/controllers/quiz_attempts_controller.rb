@@ -14,10 +14,11 @@ class DiscourseQuiz::QuizAttemptsController < ::ApplicationController
   end
 
   def index
-    attempt = DiscourseQuiz::QuizAttempt.find(params[:id])
+    quiz = DiscourseQuiz::Quiz.find(params[:quiz_id])
 
-    render json: DiscourseQuiz::QuizAttemptSerializer.new(
-      quiz_attempt
+    render json: ActiveModel::ArraySerializer.new(
+      quiz.attempts,
+      each_serializer: DiscourseQuiz::QuizAttemptSerializer
     ).as_json
   end
 
