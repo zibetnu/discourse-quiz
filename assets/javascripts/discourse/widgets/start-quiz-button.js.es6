@@ -4,6 +4,14 @@ import { createWidget } from "discourse/widgets/widget";
 export default createWidget("start-quiz-button", {
   tagName: "button.btn.btn-primary",
 
+  buildKey: (attrs) => `start-quiz-button-${attrs.id}`,
+
+  defaultState(attrs) {
+    return {
+      model: attrs.model,
+    };
+  },
+
   click() {
     // this.sendWidgetAction("changeWatchingInviteeStatus", "going");
   },
