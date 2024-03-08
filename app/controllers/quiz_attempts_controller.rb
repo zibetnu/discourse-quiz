@@ -8,13 +8,17 @@ class DiscourseQuiz::QuizAttemptsController < ::ApplicationController
 
     quiz_attempt.save!
 
-    render json: quiz_attempt
+    render json: DiscourseQuiz::QuizAttemptSerializer.new(
+      quiz_attempt
+    ).as_json
   end
 
   def index
     attempt = DiscourseQuiz::QuizAttempt.find(params[:id])
 
-    render json: attempt
+    render json: DiscourseQuiz::QuizAttemptSerializer.new(
+      quiz_attempt
+    ).as_json
   end
 
   def update
@@ -22,7 +26,9 @@ class DiscourseQuiz::QuizAttemptsController < ::ApplicationController
 
     attempt.update!(quiz_attempt_params)
 
-    render json: attempt
+    render json: DiscourseQuiz::QuizAttemptSerializer.new(
+      quiz_attempt
+    ).as_json
   end
 
   private

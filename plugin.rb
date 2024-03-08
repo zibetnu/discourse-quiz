@@ -26,6 +26,7 @@ after_initialize do
     ../app/models/quiz_attempt.rb
     ../app/models/quiz_question.rb
     ../app/models/quiz_question_response.rb
+    ../app/serializers/quiz_attempt_serializer.rb
     ../app/serializers/quiz_serializer.rb
     ../app/serializers/quiz_question_serializer.rb
     ../lib/quiz_parser.rb
