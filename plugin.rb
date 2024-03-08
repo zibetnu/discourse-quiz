@@ -44,6 +44,9 @@ after_initialize do
   DiscourseQuiz::Engine.routes.draw do
     get '/:quiz_id' => 'quizzes#show'
     put '/:quiz_id' => 'quizzes#update'
+    get '/:quiz_id/attempts' => 'quiz_attempts#index'
+    post '/:quiz_id/attempts' => 'quiz_attempts#create'
+    put '/:quiz_id/attempts' => 'quiz_attempts#update'
     get '/:quiz_id/questions' => 'quiz_questions#index'
   end
 
