@@ -129,7 +129,12 @@ createWidget("discourse-quiz", {
               model=state.model
             )
           }}
-          {{attach widget="quiz-results-button"}}
+          {{attach
+            widget="quiz-results-button"
+            attrs=(hash
+              model=state.model
+            )
+          }}
       </div>
       {{/if}}
     {{else}}
