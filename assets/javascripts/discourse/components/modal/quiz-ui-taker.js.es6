@@ -42,7 +42,20 @@ export default class QuizUiTakerModal extends Component {
           }
         },
       })
-      .then(() => {
+      .then((response) => {
+        for (let questionID in this.questionResponses) {
+          ajax({
+            type: "POST",
+            url: `/quizzes/attempts/question_responses`,
+            data: {
+              quiz_question_response: {
+                answer: this.questionResponses[questionID],
+                quiz_attempt_id: response.quiz_attempt.id,
+                quiz_question_id: questionID,
+              },
+            },
+          });
+        }
         this.closeModal();
       });
     }
