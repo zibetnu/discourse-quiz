@@ -32,7 +32,7 @@
           @id={{this.activeQuestion.id}}
           @options={{this.activeQuestion.options}}
           @answer={{this.activeQuestion.answer}}
-          @changeAnswer={{action "doNothing"}}
+          @setQuestionResponseFor={{this.setQuestionResponseFor}}
           @numQuestions={{this.model.questions.length}}
           @error={{this.activeQuestion.error}}
         />

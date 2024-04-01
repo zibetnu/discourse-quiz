@@ -14,26 +14,22 @@
         <TakeableQuestionOption
           @index={{optionIndex}}
           @text={{option}}
-          @answer={{this.answer}}
-          @setAnswer={{action this.setAnswer}}
-          @removeOption={{action this.removeOption}}
           @questionIndex={{this.index}}
+          @setQuestionResponse={{action this.setQuestionResponse}}
         />
       {{/each}}
     {{else}}
       <TakeableQuestionOption
         @index="t"
         @text="True"
-        @answer={{this.answer}}
-        @setAnswer={{action this.setAnswer}}
         @questionIndex={{this.index}}
+        @setQuestionResponse={{action this.setQuestionResponse}}
       />
       <TakeableQuestionOption
         @index="f"
         @text="False"
-        @answer={{this.answer}}
-        @setAnswer={{action this.setAnswer}}
         @questionIndex={{this.index}}
+        @setQuestionResponse={{action this.setQuestionResponse}}
       />
     {{/if}}
   </div>

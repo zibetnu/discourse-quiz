@@ -31,26 +31,8 @@ export default Component.extend({
   },
 
   @action
-  setAnswer(newAnswer) {
-    this.changeAnswer(this.index, newAnswer);
-  },
-
-  @action
-  removeOption(option_index) {
-    this.removeQuestionOption(this.index, option_index);
-  },
-
-  @action
-  addOption() {
-    if (this.newQuizOption !== "") {
-      this.addQuestionOption(this.index, this.newQuizOption);
-      this.set("newQuizOption", "");
-
-      const newOptionInput = document.querySelector(".new-quiz-option input");
-      if (newOptionInput) {
-        newOptionInput.focus();
-      }
-    }
+  setQuestionResponse(questionResponse) {
+    this.setQuestionResponseFor(this.id, questionResponse);
   },
 
   @action

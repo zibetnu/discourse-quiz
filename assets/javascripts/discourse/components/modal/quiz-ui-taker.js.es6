@@ -11,6 +11,7 @@ export default class QuizUiTakerModal extends Component {
 
     flash = "";
     isLoading = false;
+    questionResponses = {};
     startedAt = new Date().toISOString();
 
     @discourseComputed("model.activeQuestionIndex", "model.questions")
@@ -21,6 +22,11 @@ export default class QuizUiTakerModal extends Component {
     @action
     changeActive(newActive) {
       set(this.model, "activeQuestionIndex", newActive);
+    }
+
+    @action
+    setQuestionResponseFor(questionID, questionResponse) {
+      this.questionResponses[questionID] = questionResponse;
     }
 
     @action
@@ -39,10 +45,5 @@ export default class QuizUiTakerModal extends Component {
       .then(() => {
         this.closeModal();
       });
-    }
-
-    @action
-    doNothing(x) {
-        console.log("doNothing");
     }
 }

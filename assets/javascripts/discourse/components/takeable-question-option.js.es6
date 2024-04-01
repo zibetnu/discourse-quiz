@@ -15,6 +15,6 @@ export default class TakeableQuestionOption extends Component {
 
   @action
   select() {
-    console.log(this.index);
+    this.setQuestionResponse(this.index);
   }
 }
