@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { action, set } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import TextLib from "discourse/lib/text";
+import { cook } from "discourse/lib/text";
 import { extractError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 
@@ -237,7 +237,7 @@ export default class QuizUiBuilderModal extends Component {
               ),
             };
 
-            return TextLib.cook(newRaw).then((cooked) => {
+            return cook(newRaw).then((cooked) => {
               props.cooked = cooked.string;
               return post
                 .save(props)
