@@ -2,7 +2,7 @@ import { createWidget } from "discourse/widgets/widget";
 import { getOwner } from "@ember/application";
 import hbs from "discourse/widgets/hbs-compiler";
 import QuizUiBuilder from "../components/modal/quiz-ui-builder";
-import TextLib from "discourse/lib/text";
+import { cook } from "discourse/lib/text";
 import I18n from "I18n";
 import { extractError } from "discourse/lib/ajax-error";
 
@@ -74,7 +74,7 @@ createWidget("discourse-quiz", {
               ),
             };
 
-              return TextLib.cook(newRaw).then((cooked) => {
+            return cook(newRaw).then((cooked) => {
               props.cooked = cooked.string;
               return post.save(props).catch((e) => {
                 this.dialog.alert(extractError(e));
