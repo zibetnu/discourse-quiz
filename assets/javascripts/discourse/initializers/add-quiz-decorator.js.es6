@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import WidgetGlue from "discourse/widgets/glue";
-import { cookAsync } from "discourse/lib/text";
+import { cook } from "discourse/lib/text";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { schedule } from "@ember/runloop";
 import { applyLocalDates } from "discourse/plugins/discourse-local-dates/initializers/discourse-local-dates";
@@ -81,7 +81,7 @@ function decorateQuiz(api, cooked, opts) {
   const dates = opts.attrs.model
     ? extractDates(siteSettings, opts.attrs.model)
     : "";
-  cookAsync(dates).then((result) => {
+  cook(dates).then((result) => {
     appendWidget(quizContainer, "discourse-quiz", getRegister(api), {
       id: "discourse-quiz",
       dates: result,

@@ -1,0 +1,65 @@
+<DModal
+  @closeModal={{@closeModal}}
+  @title={{i18n "discourse_quiz.ui_builder.title"}}
+  class="quiz-ui-builder"
+  @submitOnEnter={{false}}
+  @flash={{this.flash}}
+>
+  <:body>
+    {{#if this.isLoading}}
+      {{loading-spinner}}
+    {{else}}
+      <div class="quiz-questions-header">
+        <p>{{i18n "discourse_quiz.ui_builder.questions"}}</p>
+        <div class="quiz-questions-nav">
+          {{#each this.model.questions as |question index|}}
+            <QuestionNumber
+              @index={{index}}
+              @activeQuestionIndex={{this.model.activeQuestionIndex}}
+              @changeActive={{action "changeActive"}}
+              @error={{question.error}}
+            />
+          {{/each}}
+          <DButton
+            @action={{action "addQuestion"}}
+            @icon="plus"
+            class="btn-secondary"
+            @title="js.discourse_quiz.ui_builder.add_question"
+          />
+        </div>
+      </div>
+
+      {{#if this.activeQuestion}}
+        <QuestionBody
+          @index={{this.model.activeQuestionIndex}}
+          @text={{this.activeQuestion.text}}
+          @format={{this.activeQuestion.format}}
+          @position={{this.activeQuestion.position}}
+          @id={{this.activeQuestion.question_id}}
+          @options={{this.activeQuestion.options}}
+          @answer={{this.activeQuestion.answer}}
+          @changeAnswer={{this.changeAnswer}}
+          @removeQuestionOption={{action this.removeQuestionOption}}
+          @addQuestionOption={{action this.addQuestionOption}}
+          @deleteQuestion={{action this.deleteQuestion}}
+          @moveQuestion={{action this.moveQuestion}}
+          @numQuestions={{this.model.questions.length}}
+          @error={{this.activeQuestion.error}}
+        />
+      {{/if}}
+    {{/if}}
+  </:body>
+  <:footer>
+    <DButton
+      @action={{action "upsertQuiz"}}
+      @icon="graduation-cap"
+      @label={{if this.inCreateMode "discourse_quiz.ui_builder.insert" "discourse_quiz.ui_builder.update"}}
+      class="btn-primary"
+    />
+    <DButton
+      @action={{route-action "closeModal"}}
+      @label="cancel"
+      class="btn-flat"
+    />
+  </:footer>
+</DModal>

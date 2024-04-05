@@ -1,105 +1,101 @@
-import Controller from "@ember/controller";
+import Component from "@ember/component";
 import { action, set } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
-import TextLib from "discourse/lib/text";
+import { cook } from "discourse/lib/text";
 import { extractError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
 
-export default Controller.extend(ModalFunctionality, {
-  questions: null,
-  activeQuestionIndex: null,
-  mode: "create",
-  isLoading: false,
+export default class QuizUiBuilderModal extends Component {
+  @service dialog;
 
-  @discourseComputed("activeQuestionIndex", "questions")
+  isLoading = false;
+  flash = "";
+
+  @discourseComputed("model.activeQuestionIndex", "model.questions")
   activeQuestion(activeQuestionIndex, questions) {
     return questions[activeQuestionIndex];
-  },
+  }
 
-  @discourseComputed("mode")
+  @discourseComputed("model.mode")
   inCreateMode(mode) {
     return mode === "create";
-  },
+  }
 
-  @discourseComputed("mode")
+  @discourseComputed("model.mode")
   inUpdateMode(mode) {
     return mode === "update";
-  },
+  }
 
   @action
   changeActive(newActive) {
-    this.set("activeQuestionIndex", newActive);
-  },
+    set(this.model, "activeQuestionIndex", newActive);
+  }
 
   @action
   changeAnswer(questionIndex, answer) {
-    set(this.questions[questionIndex], "answer", answer);
-  },
+    set(this.model.questions[questionIndex], "answer", answer);
+  }
 
   @action
   removeQuestionOption(questionIndex, optionIndex) {
-    if (this.questions[questionIndex].answer === optionIndex) {
-      set(this.questions[questionIndex], "answer", null);
-    } else if (optionIndex < this.questions[questionIndex].answer) {
+    if (this.model.questions[questionIndex].answer === optionIndex) {
+      set(this.model.questions[questionIndex], "answer", null);
+    } else if (optionIndex < this.model.questions[questionIndex].answer) {
       set(
-        this.questions[questionIndex],
+        this.model.questions[questionIndex],
         "answer",
-        this.questions[questionIndex].answer - 1
+        this.model.questions[questionIndex].answer - 1
       );
     }
-    this.questions[questionIndex].options.removeAt(optionIndex);
-  },
+    this.model.questions[questionIndex].options.removeAt(optionIndex);
+  }
 
   @action
   addQuestionOption(questionIndex, optionText) {
-    this.questions[questionIndex].options.pushObject(optionText);
-  },
+    this.model.questions[questionIndex].options.pushObject(optionText);
+  }
 
   @action
   addQuestion() {
-    this.questions.pushObject({
+    this.model.questions.pushObject({
       format: "multiple_choice",
       text: "",
       options: [],
       answer: null,
       error: null,
     });
-    this.set("activeQuestionIndex", this.questions.length - 1);
-  },
+    set(this.model, "activeQuestionIndex", this.model.questions.length - 1);
+  }
 
   @action
   deleteQuestion(questionIndex) {
-    bootbox.confirm(
-      I18n.t("discourse_quiz.ui_builder.confirm_delete_question"),
-      I18n.t("no_value"),
-      I18n.t("yes_value"),
-      (confirmed) => {
-        if (confirmed) {
-          let deletingLast = questionIndex === this.questions.length - 1;
-          this.questions.removeAt(questionIndex);
-          if (deletingLast) {
-            this.changeActive(questionIndex - 1);
-          } else {
-            this.changeActive(null); // set null first to force refresh
-            this.changeActive(questionIndex);
-          }
-          window.setTimeout(function () {
-            const deleteButton = document.querySelector(
-              ".quiz-question-controls button.btn-danger"
-            );
-            if (deleteButton) {
-              // Keep focus on delete button if possible
-              deleteButton.focus();
-            } else {
-              // When all questions have been deleted, focus on the "Add question" button
-              document.querySelector(".quiz-questions-nav button").focus();
-            }
-          }, 0);
+    this.dialog.deleteConfirm({
+      message: I18n.t("discourse_quiz.ui_builder.confirm_delete_question"),
+      didConfirm: () => {
+        let deletingLast = questionIndex === this.model.questions.length - 1;
+        this.model.questions.removeAt(questionIndex);
+        if (deletingLast) {
+          this.changeActive(questionIndex - 1);
+        } else {
+          this.changeActive(null); // set null first to force refresh
+          this.changeActive(questionIndex);
         }
-      }
-    );
-  },
+        window.setTimeout(function () {
+          const deleteButton = document.querySelector(
+            ".quiz-question-controls button.btn-danger"
+          );
+          if (deleteButton) {
+            // Keep focus on delete button if possible
+            deleteButton.focus();
+          } else {
+            // When all questions have been deleted, focus on the "Add question" button
+            document.querySelector(".quiz-questions-nav button").focus();
+          }
+        }, 0);
+      },
+    });
+  }
 
   @action
   moveQuestion(questionIndex, positions) {
@@ -113,15 +109,15 @@ export default Controller.extend(ModalFunctionality, {
 
     if (positions > 0) {
       // Swap this question with the one immediately behind it
-      const question1 = this.questions[questionIndex];
-      const question2 = this.questions[questionIndex + 1];
-      this.questions
+      const question1 = this.model.questions[questionIndex];
+      const question2 = this.model.questions[questionIndex + 1];
+      this.model.questions
         .replace(questionIndex + 1, 1, [question1])
         .replace(questionIndex, 1, [question2]);
-      set(this.questions[questionIndex], "position", questionIndex + 1);
-      set(this.questions[questionIndex + 1], "position", questionIndex + 2);
+      set(this.model.questions[questionIndex], "position", questionIndex + 1);
+      set(this.model.questions[questionIndex + 1], "position", questionIndex + 2);
       if (positions === 1) {
-        this.set("activeQuestionIndex", questionIndex + 1);
+        set(this.model, "activeQuestionIndex", questionIndex + 1);
         return;
       } else {
         // Continue swapping back until desired number of positions moved
@@ -129,27 +125,27 @@ export default Controller.extend(ModalFunctionality, {
       }
     } else {
       // Swap this question with the one immediately before it
-      const question1 = this.questions[questionIndex];
-      const question2 = this.questions[questionIndex - 1];
-      this.questions
+      const question1 = this.model.questions[questionIndex];
+      const question2 = this.model.questions[questionIndex - 1];
+      this.model.questions
         .replace(questionIndex - 1, 1, [question1])
         .replace(questionIndex, 1, [question2]);
-      set(this.questions[questionIndex], "position", questionIndex + 1);
-      set(this.questions[questionIndex - 1], "position", questionIndex);
+      set(this.model.questions[questionIndex], "position", questionIndex + 1);
+      set(this.model.questions[questionIndex - 1], "position", questionIndex);
       if (positions === -1) {
-        this.set("activeQuestionIndex", questionIndex - 1);
+        set(this.model, "activeQuestionIndex", questionIndex - 1);
         return;
       } else {
         // Continue swapping forward until desired number of positions moved
         return this.moveQuestion(questionIndex - 1, positions + 1);
       }
     }
-  },
+  }
 
   verify() {
     let isError = false;
-    if (this.questions.length === 0) {
-      bootbox.alert("Error: Quiz must contain at least one question", () => {
+    if (this.model.questions.length === 0) {
+      this.dialog.alert("Error: Quiz must contain at least one question", () => {
         // return focus to "Insert Quiz" button
         window.setTimeout(function () {
           document.querySelector(".modal-footer button.btn-primary").focus();
@@ -159,30 +155,30 @@ export default Controller.extend(ModalFunctionality, {
       return !isError;
     }
 
-    for (const [index, question] of this.questions.entries()) {
+    for (const [index, question] of this.model.questions.entries()) {
       if (question.text === "") {
-        set(this.questions[index], "error", "Question text must not be empty");
+        set(this.model.questions[index], "error", "Question text must not be empty");
         isError = true;
       } else if (
         question.format === "multiple_choice" &&
         question.options.length < 2
       ) {
         set(
-          this.questions[index],
+          this.model.questions[index],
           "error",
           "Multiple choice questions must have at least two options"
         );
         isError = true;
       } else if (question.answer === null) {
-        set(this.questions[index], "error", "Please select the correct answer");
+        set(this.model.questions[index], "error", "Please select the correct answer");
         isError = true;
       } else {
-        set(this.questions[index], "error", null);
+        set(this.model.questions[index], "error", null);
       }
     }
 
     if (isError) {
-      bootbox.alert("One or more questions contains an error", () => {
+      this.dialog.alert("One or more questions contains an error", () => {
         // return focus to "Insert Quiz" button
         window.setTimeout(function () {
           document.querySelector(".modal-footer button.btn-primary").focus();
@@ -191,11 +187,11 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     return !isError;
-  },
+  }
 
   formatOutput() {
     let lines = ["[quiz]"];
-    for (const question of this.questions) {
+    for (const question of this.model.questions) {
       lines.push(`[question format="${question.format}"]`);
       lines.push(question.text);
       if (question.format === "multiple_choice") {
@@ -219,14 +215,14 @@ export default Controller.extend(ModalFunctionality, {
     }
     lines.push("[/quiz]");
     return lines.join("\n");
-  },
+  }
 
   @action
   upsertQuiz() {
     if (this.verify()) {
       if (this.inCreateMode) {
-        this.toolbarEvent.addText(this.formatOutput());
-        this.send("closeModal");
+        this.model.toolbarEvent.addText(this.formatOutput());
+        this.closeModal();
       } else if (this.inUpdateMode) {
         this.set("isLoading", true);
         this.store
@@ -241,25 +237,25 @@ export default Controller.extend(ModalFunctionality, {
               ),
             };
 
-            return TextLib.cookAsync(newRaw).then((cooked) => {
+            return cook(newRaw).then((cooked) => {
               props.cooked = cooked.string;
               return post
                 .save(props)
                 .catch((e) => {
                   this.set("isLoading", false);
-                  this.flash(extractError(e), "error");
+                  this.set("flash", extractError(e))
                 })
                 .then(() => {
                   this.set("isLoading", false);
-                  this.send("closeModal");
+                  this.closeModal();
                 });
             });
           })
           .catch((e) => {
             this.set("isLoading", false);
-            this.flash(extractError(e), "error");
+            this.set("flash", extractError(e))
           });
       }
     }
-  },
-});
+  }
+};

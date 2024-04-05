@@ -1,0 +1,16 @@
+<div
+  class={{if this.isSelected "quiz-question-option selected" "quiz-question-option"}}
+>
+  <input type="radio" name={{this.questionName}} checked={{this.isSelected}} onclick={{action this.select}} id={{this.radioId}}>
+  {{#if this.editable}}
+    <Input @type="text" @value={{this.text}} />
+    <DButton
+      @icon="times"
+      class="btn-danger"
+      @action={{action "delete"}}
+      @title="js.discourse_quiz.ui_builder.delete_option"
+    />
+  {{else}}
+    <label for={{this.radioId}}>{{this.text}}</label>
+  {{/if}}
+</div>

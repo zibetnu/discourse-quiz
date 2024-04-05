@@ -1,7 +1,8 @@
 import { createWidget } from "discourse/widgets/widget";
+import { getOwner } from "@ember/application";
 import hbs from "discourse/widgets/hbs-compiler";
-import showModal from "discourse/lib/show-modal";
-import TextLib from "discourse/lib/text";
+import QuizUiBuilder from "../components/modal/quiz-ui-builder";
+import { cook } from "discourse/lib/text";
 import I18n from "I18n";
 import { extractError } from "discourse/lib/ajax-error";
 
@@ -15,6 +16,8 @@ createWidget("discourse-quiz", {
       model: attrs.model,
     };
   },
+
+  services: ["dialog"],
 
   open() {
     return this.store
@@ -43,48 +46,46 @@ createWidget("discourse-quiz", {
     this.store
       .find("discourse-quiz-question", { quiz_id: this.state.model.id })
       .then((resp) => {
-        showModal("quiz-ui-builder").setProperties({
-          questions: resp.content,
-          activeQuestionIndex: 0,
-          mode: "update",
-          model: this.state.model,
+        getOwner(this).lookup("service:modal").show(QuizUiBuilder, {
+          model: {
+            questions: resp.content,
+            activeQuestionIndex: 0,
+            mode: "update",
+            post_id: this.state.model.post_id,
+          },
         });
       });
   },
 
   delete() {
     /* Delete the quiz from the post */
-    bootbox.confirm(
-      I18n.t("discourse_quiz.ui_builder.confirm_delete_quiz"),
-      I18n.t("no_value"),
-      I18n.t("yes_value"),
-      (confirmed) => {
-        if (confirmed) {
-          this.store
-            .find("post", this.state.model.post_id)
-            .then((post) => {
-              const quiz_pattern = /\[quiz[\s\S]*?\[\/quiz\]/;
-              const newRaw = post.raw.replace(quiz_pattern, "");
-              const props = {
-                raw: newRaw,
-                edit_reason: I18n.t(
-                  "discourse_quiz.ui_builder.edit_reason_delete"
-                ),
-              };
+    this.dialog.deleteConfirm({
+      message: I18n.t("discourse_quiz.ui_builder.confirm_delete_quiz"),
+      didConfirm: () => {
+        this.store
+          .find("post", this.state.model.post_id)
+          .then((post) => {
+            const quiz_pattern = /\[quiz[\s\S]*?\[\/quiz\]/;
+            const newRaw = post.raw.replace(quiz_pattern, "");
+            const props = {
+              raw: newRaw,
+              edit_reason: I18n.t(
+                "discourse_quiz.ui_builder.edit_reason_delete"
+              ),
+            };
 
-              return TextLib.cookAsync(newRaw).then((cooked) => {
-                props.cooked = cooked.string;
-                return post.save(props).catch((e) => {
-                  this.flash(extractError(e), "error");
-                });
+            return cook(newRaw).then((cooked) => {
+              props.cooked = cooked.string;
+              return post.save(props).catch((e) => {
+                this.dialog.alert(extractError(e));
               });
-            })
-            .catch((e) => {
-              this.flash(extractError(e), "error");
             });
-        }
-      }
-    );
+          })
+          .catch((e) => {
+            this.dialog.alert(extractError(e));
+          });
+      },
+    });
   },
 
   template: hbs`
@@ -93,7 +94,7 @@ createWidget("discourse-quiz", {
       <div class="quiz-preview-body">
         <div>
           <h2>
-            {{d-icon "graduation-cap"}} 
+            {{d-icon "graduation-cap"}}
               {{state.model.title}}
           </h2>
           <p class="quiz-info">
@@ -105,7 +106,7 @@ createWidget("discourse-quiz", {
         <div class="quiz-preview-right-side">
           <div>
             {{#if state.model.can_act_on_quiz}}
-              {{attach 
+              {{attach
                 widget="quiz-options"
                 attrs=(hash
                   model=state.model
