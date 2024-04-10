@@ -20,7 +20,7 @@ acceptance("Discourse Quiz - Quiz builder is enabled", function (needs) {
     await displayQuizBuilderButton();
 
     assert.ok(
-      exists(".select-kit-row[data-value='showQuizBuilder']"),
+      exists(".select-kit-row[data-name='Build Quiz']"),
       "it shows the builder button"
     );
   });
