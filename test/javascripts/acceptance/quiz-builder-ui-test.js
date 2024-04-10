@@ -2,6 +2,7 @@ import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { openQuizBuilder } from "../helpers/open-quiz-builder";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { click, fillIn } from "@ember/test-helpers";
+import { test } from 'qunit';
 
 acceptance("Discourse Quiz - UI Builder", function (needs) {
   needs.user();
