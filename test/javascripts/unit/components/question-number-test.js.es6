@@ -19,7 +19,7 @@ discourseModule("Unit | Component | question-number", function (hooks) {
   });
 
   componentTest("active", {
-    template: hbs`<QuestionNumber @index=0 @activeQuestion=1 />`,
+    template: hbs`<QuestionNumber @index=0 @activeQuestionIndex=0 />`,
 
     test(assert) {
       assert.ok(
