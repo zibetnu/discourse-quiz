@@ -96,7 +96,7 @@ acceptance("Discourse Quiz - UI Builder", function (needs) {
   test("Add/remove option", async function (assert) {
     await openQuizBuilder();
 
-    await fillIn(".new-quiz-option input");
+    await fillIn(".new-quiz-option input", "Example");
 
     await click('button[title="Add option"]');
     let questionOptions = document.querySelectorAll(".quiz-question-option");
