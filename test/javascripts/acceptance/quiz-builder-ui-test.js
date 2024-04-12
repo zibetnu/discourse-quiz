@@ -62,7 +62,7 @@ acceptance("Discourse Quiz - UI Builder", function (needs) {
 
     // Click "Delete question" button
     await click(".quiz-question-controls button.btn-danger");
-    await click(".bootbox.modal .btn-primary");
+    await click(".dialog-footer button.btn-danger");
 
     questionButtons = document.querySelectorAll(".quiz-questions-nav-item");
     assert.equal(
@@ -81,7 +81,7 @@ acceptance("Discourse Quiz - UI Builder", function (needs) {
 
     // Click "Delete question" button (again)
     await click(".quiz-question-controls button.btn-danger");
-    await click(".bootbox.modal .btn-primary");
+    await click(".dialog-footer button.btn-danger");
     questionButtons = document.querySelectorAll(".quiz-questions-nav-item");
     activeQuestion = document.querySelector(
       ".quiz-questions-nav-item.btn-primary"
