@@ -1,0 +1,36 @@
+<div class="quiz-question-body">
+  <div class="quiz-question-header">
+    {{#if this.error}}
+      <p class="quiz-question-error">
+        {{d-icon "exclamation-triangle"}}
+        {{this.error}}
+      </p>
+    {{/if}}
+  </div>
+  <p>{{this.text}}</p>
+  <div class="quiz-question-options">
+    {{#if this.isMultipleChoice }}
+      {{#each this.options as |option optionIndex|}}
+        <TakeableQuestionOption
+          @index={{optionIndex}}
+          @text={{option}}
+          @questionIndex={{this.index}}
+          @setQuestionResponse={{action this.setQuestionResponse}}
+        />
+      {{/each}}
+    {{else}}
+      <TakeableQuestionOption
+        @index="t"
+        @text="True"
+        @questionIndex={{this.index}}
+        @setQuestionResponse={{action this.setQuestionResponse}}
+      />
+      <TakeableQuestionOption
+        @index="f"
+        @text="False"
+        @questionIndex={{this.index}}
+        @setQuestionResponse={{action this.setQuestionResponse}}
+      />
+    {{/if}}
+  </div>
+</div>

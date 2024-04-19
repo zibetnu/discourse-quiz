@@ -123,7 +123,12 @@ createWidget("discourse-quiz", {
       </div>
       {{#if state.model.is_open}}
       <div class="quiz-preview-footer">
-          {{attach widget="start-quiz-button"}}
+          {{attach
+            widget="start-quiz-button"
+            attrs=(hash
+              model=state.model
+            )
+          }}
           {{attach widget="quiz-results-button"}}
       </div>
       {{/if}}

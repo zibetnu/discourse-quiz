@@ -21,12 +21,15 @@ after_initialize do
   %w[
     ../app/controllers/quizzes_controller.rb
     ../app/controllers/quiz_questions_controller.rb
+    ../app/controllers/quiz_question_responses_controller.rb
     ../app/controllers/quiz_attempts_controller.rb
     ../app/models/quiz.rb
     ../app/models/quiz_attempt.rb
     ../app/models/quiz_question.rb
     ../app/models/quiz_question_response.rb
+    ../app/serializers/quiz_attempt_serializer.rb
     ../app/serializers/quiz_serializer.rb
+    ../app/serializers/quiz_question_response_serializer.rb
     ../app/serializers/quiz_question_serializer.rb
     ../lib/quiz_parser.rb
     ../lib/quiz_validator.rb
@@ -44,7 +47,11 @@ after_initialize do
   DiscourseQuiz::Engine.routes.draw do
     get '/:quiz_id' => 'quizzes#show'
     put '/:quiz_id' => 'quizzes#update'
+    get '/:quiz_id/attempts' => 'quiz_attempts#index'
+    post '/:quiz_id/attempts' => 'quiz_attempts#create'
     get '/:quiz_id/questions' => 'quiz_questions#index'
+    get '/attempts/:attempt_id/question_responses' => 'quiz_question_responses#index'
+    post '/attempts/question_responses' => 'quiz_question_responses#create'
   end
 
   Discourse::Application.routes.append do

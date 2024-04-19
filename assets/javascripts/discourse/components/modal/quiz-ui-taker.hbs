@@ -1,0 +1,55 @@
+<DModal
+  @closeModal={{@closeModal}}
+  @title={{i18n "discourse_quiz.ui_taker.title"}}
+  class="quiz-ui-builder"
+  @submitOnEnter={{false}}
+  @flash={{this.flash}}
+>
+  <:body>
+    {{#if this.isLoading}}
+      {{loading-spinner}}
+    {{else}}
+      <div class="quiz-questions-header">
+        <p>{{i18n "discourse_quiz.ui_builder.questions"}}</p>
+        <div class="quiz-questions-nav">
+          {{#each this.model.questions as |question index|}}
+            <QuestionNumber
+              @index={{index}}
+              @activeQuestionIndex={{this.model.activeQuestionIndex}}
+              @changeActive={{action "changeActive"}}
+              @error={{question.error}}
+            />
+          {{/each}}
+        </div>
+      </div>
+
+      {{#if this.activeQuestion}}
+        <TakeableQuestionBody
+          @index={{this.model.activeQuestionIndex}}
+          @text={{this.activeQuestion.text}}
+          @format={{this.activeQuestion.format}}
+          @position={{this.activeQuestion.position}}
+          @id={{this.activeQuestion.id}}
+          @options={{this.activeQuestion.options}}
+          @answer={{this.activeQuestion.answer}}
+          @setQuestionResponseFor={{this.setQuestionResponseFor}}
+          @numQuestions={{this.model.questions.length}}
+          @error={{this.activeQuestion.error}}
+        />
+      {{/if}}
+    {{/if}}
+  </:body>
+  <:footer>
+    <DButton
+      @action={{action "submitQuiz"}}
+      @icon="graduation-cap"
+      @label={{"discourse_quiz.ui_taker.submit"}}
+      class="btn-primary"
+    />
+    <DButton
+      @action={{route-action "closeModal"}}
+      @label="cancel"
+      class="btn-flat"
+    />
+  </:footer>
+</DModal>
