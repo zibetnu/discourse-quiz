@@ -1,3 +1,6 @@
+> [!WARNING]
+> This plugin is in early development. It is not ready for general use.
+
 # Discourse Quiz
 
 The discourse-quiz plugin adds support for quizzes to your Discourse site.
