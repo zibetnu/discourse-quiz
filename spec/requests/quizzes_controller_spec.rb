@@ -20,7 +20,7 @@ describe DiscourseQuiz::QuizzesController do
     it "updates quiz" do
       quiz = Fabricate(:quiz)
       expect(quiz.is_open).to eq(false)
-      put "/quizzes/#{quiz.id}.json", { params: { "quiz[is_open]" => true } }
+      put "/quizzes/#{quiz.id}.json", params: { "quiz[is_open]" => true }
       expect(response.status).to eq(200)
       quiz = DiscourseQuiz::Quiz.find(quiz.id)
       expect(quiz.is_open).to eq(true)

@@ -8,7 +8,7 @@ discourseModule("Unit | Component | question-number", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("regular", {
-    template: hbs`<QuestionNumber @position=1 @activeQuestionIndex=2 />`,
+    template: hbs`<QuestionNumber @index=0 @activeQuestionIndex=2 />`,
 
     test(assert) {
       assert.ok(
@@ -19,7 +19,7 @@ discourseModule("Unit | Component | question-number", function (hooks) {
   });
 
   componentTest("active", {
-    template: hbs`<QuestionNumber @position=1 @activeQuestion=1 />`,
+    template: hbs`<QuestionNumber @index=0 @activeQuestionIndex=0 />`,
 
     test(assert) {
       assert.ok(

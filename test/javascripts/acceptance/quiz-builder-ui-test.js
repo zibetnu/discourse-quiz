@@ -2,6 +2,7 @@ import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { openQuizBuilder } from "../helpers/open-quiz-builder";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { click, fillIn } from "@ember/test-helpers";
+import { test } from 'qunit';
 
 acceptance("Discourse Quiz - UI Builder", function (needs) {
   needs.user();
@@ -61,7 +62,7 @@ acceptance("Discourse Quiz - UI Builder", function (needs) {
 
     // Click "Delete question" button
     await click(".quiz-question-controls button.btn-danger");
-    await click(".bootbox.modal .btn-primary");
+    await click(".dialog-footer button.btn-danger");
 
     questionButtons = document.querySelectorAll(".quiz-questions-nav-item");
     assert.equal(
@@ -80,7 +81,7 @@ acceptance("Discourse Quiz - UI Builder", function (needs) {
 
     // Click "Delete question" button (again)
     await click(".quiz-question-controls button.btn-danger");
-    await click(".bootbox.modal .btn-primary");
+    await click(".dialog-footer button.btn-danger");
     questionButtons = document.querySelectorAll(".quiz-questions-nav-item");
     activeQuestion = document.querySelector(
       ".quiz-questions-nav-item.btn-primary"
@@ -95,7 +96,7 @@ acceptance("Discourse Quiz - UI Builder", function (needs) {
   test("Add/remove option", async function (assert) {
     await openQuizBuilder();
 
-    await fillIn(".new-quiz-option input");
+    await fillIn(".new-quiz-option input", "Example");
 
     await click('button[title="Add option"]');
     let questionOptions = document.querySelectorAll(".quiz-question-option");
