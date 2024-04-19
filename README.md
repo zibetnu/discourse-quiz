@@ -3,7 +3,7 @@
 
 # Discourse Quiz
 
-The discourse-quiz plugin adds support for quizzes to your Discourse site.
+Add quizzes to your Discourse site.
 
 A quiz is similar to a poll, but with multiple questions and correct answers.
 
