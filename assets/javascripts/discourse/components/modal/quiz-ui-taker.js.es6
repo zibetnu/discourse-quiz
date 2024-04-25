@@ -6,6 +6,7 @@ import I18n from "I18n";
 import { extractError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 
+// Class actions for taking a quiz
 export default class QuizUiTakerModal extends Component {
     @service dialog;
 
@@ -14,21 +15,25 @@ export default class QuizUiTakerModal extends Component {
     questionResponses = {};
     startedAt = new Date().toISOString();
 
+    // Retrieves the active question
     @discourseComputed("model.activeQuestionIndex", "model.questions")
     activeQuestion(activeQuestionIndex, questions) {
       return questions[activeQuestionIndex];
     }
 
+    // Changes the active question
     @action
     changeActive(newActive) {
       set(this.model, "activeQuestionIndex", newActive);
     }
 
+    // Sets the response for a question
     @action
     setQuestionResponseFor(questionID, questionResponse) {
       this.questionResponses[questionID] = questionResponse;
     }
 
+    // Submit the quiz upon completion
     @action
     submitQuiz() {
       ajax(`/quizzes/${this.model.id}/attempts`, {

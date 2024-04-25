@@ -6,37 +6,44 @@ import { cook } from "discourse/lib/text";
 import { extractError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 
+// Class actions for Quiz Builder to create a quiz
 export default class QuizUiBuilderModal extends Component {
   @service dialog;
 
   isLoading = false;
   flash = "";
 
+  // Computes the active question based on the index and questions array
   @discourseComputed("model.activeQuestionIndex", "model.questions")
   activeQuestion(activeQuestionIndex, questions) {
     return questions[activeQuestionIndex];
   }
 
+  // Check if the current mode is 'create'.
   @discourseComputed("model.mode")
   inCreateMode(mode) {
     return mode === "create";
   }
 
+  // Check if the current mode is 'update'.
   @discourseComputed("model.mode")
   inUpdateMode(mode) {
     return mode === "update";
   }
 
+  // Actions for component interactions like changing the active question, updating answers, etc.
   @action
   changeActive(newActive) {
     set(this.model, "activeQuestionIndex", newActive);
   }
 
+  // Change the answer of a question
   @action
   changeAnswer(questionIndex, answer) {
     set(this.model.questions[questionIndex], "answer", answer);
   }
 
+  // Remove a question Option
   @action
   removeQuestionOption(questionIndex, optionIndex) {
     if (this.model.questions[questionIndex].answer === optionIndex) {
@@ -51,11 +58,13 @@ export default class QuizUiBuilderModal extends Component {
     this.model.questions[questionIndex].options.removeAt(optionIndex);
   }
 
+  // Add a question option
   @action
   addQuestionOption(questionIndex, optionText) {
     this.model.questions[questionIndex].options.pushObject(optionText);
   }
 
+  // Add an new question
   @action
   addQuestion() {
     this.model.questions.pushObject({
@@ -68,6 +77,7 @@ export default class QuizUiBuilderModal extends Component {
     set(this.model, "activeQuestionIndex", this.model.questions.length - 1);
   }
 
+  // Delete an existing question
   @action
   deleteQuestion(questionIndex) {
     this.dialog.deleteConfirm({
@@ -97,6 +107,7 @@ export default class QuizUiBuilderModal extends Component {
     });
   }
 
+  // Move the order of a question
   @action
   moveQuestion(questionIndex, positions) {
     /*
@@ -142,6 +153,7 @@ export default class QuizUiBuilderModal extends Component {
     }
   }
 
+  // Verifies that the quiz is in a good state to be saved
   verify() {
     let isError = false;
     if (this.model.questions.length === 0) {
@@ -189,6 +201,7 @@ export default class QuizUiBuilderModal extends Component {
     return !isError;
   }
 
+  // Format the quiz into text
   formatOutput() {
     let lines = ["[quiz]"];
     for (const question of this.model.questions) {
@@ -217,6 +230,7 @@ export default class QuizUiBuilderModal extends Component {
     return lines.join("\n");
   }
 
+  // Post the quiz
   @action
   upsertQuiz() {
     if (this.verify()) {
