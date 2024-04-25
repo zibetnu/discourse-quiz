@@ -7,6 +7,7 @@ import hbs from "htmlbars-inline-precompile";
 discourseModule("Unit | Component | question-number", function (hooks) {
   setupRenderingTest(hooks);
 
+  // Tests that a selected button shows up as selected
   componentTest("regular", {
     template: hbs`<QuestionNumber @index=0 @activeQuestionIndex=2 />`,
 
@@ -18,6 +19,7 @@ discourseModule("Unit | Component | question-number", function (hooks) {
     },
   });
 
+  // Tests that a non-selected button doesn't show as selected
   componentTest("active", {
     template: hbs`<QuestionNumber @index=0 @activeQuestionIndex=0 />`,
 

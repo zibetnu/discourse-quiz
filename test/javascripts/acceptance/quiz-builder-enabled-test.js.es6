@@ -14,6 +14,7 @@ acceptance("Discourse Quiz - Quiz builder is enabled", function (needs) {
   });
   needs.hooks.beforeEach(() => clearPopupMenuOptionsCallback());
 
+  // Tests that the quiz builder pops up when enabled
   test("regular user", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
