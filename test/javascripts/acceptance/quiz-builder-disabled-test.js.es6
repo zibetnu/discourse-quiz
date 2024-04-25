@@ -14,13 +14,14 @@ acceptance("Discourse Quiz - Quiz builder is disabled", function (needs) {
   });
   needs.hooks.beforeEach(() => clearPopupMenuOptionsCallback());
 
+  // Tests when the Quiz Builder is disabled
   test("regular user", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
     await displayQuizBuilderButton();
 
     assert.ok(
-      !exists(".select-kit-row[data-value='showQuizBuilder']"),
+      !exists(".select-kit-row[data-name='Build Quiz']"),
       "it hides the builder button"
     );
   });
